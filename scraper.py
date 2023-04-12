@@ -28,31 +28,29 @@ selectors={
         'content':['div.user-post__text'],
         'pros':['div.review-feature__col:has(>div.review-feature__title--positives)>div.review-feature__item',None,True],
         'cons':['div.review-feature__col:has(>div.review-feature__title--negatives)>div.review-feature__item',None,True]
-
-
-
-
     }
 product_code='96685108'
-page_no=1
+
 all_opinions=[]
-while(page_no):
-    url=f'https://www.ceneo.pl/{product_code}/opinie-{page_no}'
+url=f'https://www.ceneo.pl/{product_code}#tab=reviews'
+while(url):
+   
     print(url)
-    respons=requests.get(url,allow_redirects=False)
-    print(respons.status_code)
-    if respons.status_code==301:
-        
-        page_no=None
-        break
-    page=BeautifulSoup(respons.text,'html.parser')
+    response=requests.get(url)
+    
+    page=BeautifulSoup(response.text,'html.parser')
     opinions=page.select('div.js_product-review')
     for opinion in opinions:
         single_opinion={}
         for key,value in selectors.items():
             single_opinion[key]=get_element(opinion,*value)
         all_opinions.append(single_opinion)
-    page_no+=1
+    try:
+        
+        url='https://www.ceneo.pl'+get_element(page,'a.pagination__next','href')
+    except TypeError:
+        url=None
+print(len(all_opinions))
 with open(f'./opinions/{product_code}.json','w',encoding='UTF-8') as jf:
     json.dump(all_opinions,jf,indent=4,ensure_ascii=False) 
 
