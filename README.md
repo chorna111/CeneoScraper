@@ -18,5 +18,9 @@
 ## Uzyte biblioteki
 ### -Requests
 ### -BeautifulSoup4
-###-Pandas
-###-Matplotlib
+### -Json
+### Os
+### -Pandas
+### -Matplotlib
+### -Numpy
+
